@@ -51,7 +51,7 @@ public class Day01 {
             int calories = 0;
 
             // get total calories not separated by a space
-            while (!line.equals("") ) {
+            while (!line.equals("")) {
                 calories += Integer.parseInt(line);
                 if (in.hasNext()) {
                     line = in.nextLine();
@@ -65,7 +65,7 @@ public class Day01 {
         }
         Collections.sort(calorieList);
         Collections.reverse(calorieList);
-       // System.out.println(calorieList);
+        // System.out.println(calorieList);
         System.out.println(calorieList.remove(0) + calorieList.remove(0) + calorieList.remove(0));
 
     }
