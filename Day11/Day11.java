@@ -5,7 +5,7 @@ import java.math.BigInteger;
 public class Day11 {
 
     private static class Monkey {
-        ArrayList<Integer> items;
+        ArrayList<Long> items;
         String[] operation; // operation[0] is operation, operation[1] is operand
         int divisibleBy;
         int throwToTrue;
@@ -15,9 +15,9 @@ public class Day11 {
 
         public Monkey(int monkeyNum, String[] items, String[] operation, int divisibleBy, int throwToTrue, int throwToFalse) {
             this.monkeyNum = monkeyNum;
-            this.items = new ArrayList<Integer>();
+            this.items = new ArrayList<Long>();
             for(String item : items) {
-                this.items.add(Integer.parseInt(item));
+                this.items.add(Long.parseLong(item));
             }
 
             this.operation = operation;
@@ -32,7 +32,7 @@ public class Day11 {
             //System.out.println(Arrays.toString(operation));
             for(int i = 0; i < items.size(); i++) {
                 inspected++;
-                int worry = items.get(i);
+                long worry = items.get(i);
                 if(operation[0].equals("*")) {
                     if(operation[1].equals("old")) {
                         worry *= worry;
@@ -49,18 +49,23 @@ public class Day11 {
 
                 if(part == 1)
                     worry /= 3;
+                
 
                 if(worry % divisibleBy == 0) {
-                    monkeys.get(throwToTrue).addItem(worry);
+                    int newDivBy = monkeys.get(throwToTrue).divisibleBy;
+                    
+                    monkeys.get(throwToTrue).addItem(worry % newDivBy);
                 } else {
-                    monkeys.get(throwToFalse).addItem(worry);
+                    int newDivBy = monkeys.get(throwToFalse).divisibleBy;
+                    
+                    monkeys.get(throwToFalse).addItem(worry % newDivBy);
                 }
 
             }
-            items = new ArrayList<Integer>();
+            items = new ArrayList<Long>();
         }
 
-        public void addItem(int worry) {
+        public void addItem(long worry) {
             items.add(worry);
         }
 
@@ -163,7 +168,7 @@ public class Day11 {
         }
 
 
-        for(int round = 0; round < 1000; round++) {
+        for(int round = 0; round < 20; round++) {
             for(Monkey monkey:monkeys) {
                 //System.out.println(monkey);
                 monkey.performOperation(monkeys, 2);
