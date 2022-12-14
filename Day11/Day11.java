@@ -4,6 +4,8 @@ import java.math.BigInteger;
 
 public class Day11 {
 
+    public static long lcm = 1;
+
     private static class Monkey {
         ArrayList<Long> items;
         String[] operation; // operation[0] is operation, operation[1] is operand
@@ -30,18 +32,22 @@ public class Day11 {
 
         public void performOperation(ArrayList<Monkey> monkeys, int part) {
             //System.out.println(Arrays.toString(operation));
+            //System.out.println(monkeys);
             for(int i = 0; i < items.size(); i++) {
+                
                 inspected++;
                 long worry = items.get(i);
+                long oldWorry = worry;
+               
                 if(operation[0].equals("*")) {
                     if(operation[1].equals("old")) {
-                        worry *= worry;
+                        worry *= oldWorry;
                     } else {
                         worry *= Integer.parseInt(operation[1]);
                     }
                 } else {
                     if(operation[1].equals("old")) {
-                        worry += worry;
+                        worry += oldWorry;
                     } else {
                         worry += Integer.parseInt(operation[1]);
                     }
@@ -49,16 +55,20 @@ public class Day11 {
 
                 if(part == 1)
                     worry /= 3;
+
+                if(part == 2)
+                    worry %= lcm;
+                
                 
 
                 if(worry % divisibleBy == 0) {
                     int newDivBy = monkeys.get(throwToTrue).divisibleBy;
                     
-                    monkeys.get(throwToTrue).addItem(worry % newDivBy);
+                    monkeys.get(throwToTrue).addItem(worry);
                 } else {
                     int newDivBy = monkeys.get(throwToFalse).divisibleBy;
                     
-                    monkeys.get(throwToFalse).addItem(worry % newDivBy);
+                    monkeys.get(throwToFalse).addItem(worry);
                 }
 
             }
@@ -85,7 +95,7 @@ public class Day11 {
 
     public static void part1() throws IOException {
         ArrayList<Monkey> monkeys = new ArrayList<Monkey>();
-        Scanner in = new Scanner(new File("input.txt"));
+        Scanner in = new Scanner(new File("sample.txt"));
         while(in.hasNext()) {
             String line = in.nextLine(); // Monkey 0:
             line = line.split(" ")[1];
@@ -114,7 +124,7 @@ public class Day11 {
         }
 
 
-        for(int round = 0; round < 20; round++) {
+        for(int round = 0; round < 1000; round++) {
             for(Monkey monkey:monkeys) {
                 System.out.println(monkey);
                 monkey.performOperation(monkeys, 1);
@@ -167,13 +177,19 @@ public class Day11 {
 
         }
 
+        for(Monkey m : monkeys) {
+            lcm *= m.divisibleBy;
+        }
 
-        for(int round = 0; round < 20; round++) {
+        for(int round = 0; round < 10000; round++) {
+            //System.out.println("ROUND #" + round);
             for(Monkey monkey:monkeys) {
                 //System.out.println(monkey);
                 monkey.performOperation(monkeys, 2);
             }
         }
+
+        
 
         ArrayList<Long> inspections = new ArrayList<Long>();
         for(Monkey monkey : monkeys) {

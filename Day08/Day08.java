@@ -4,6 +4,8 @@ import java.io.*;
 
 public class Day08 {
 
+    private static lcm = 1;
+
     private static class Tree {
         boolean canSee;
         int height;
